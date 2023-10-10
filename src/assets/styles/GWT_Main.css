@@ -1,0 +1,653 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+	background-color: #E9E9E9 !important;
+	height: 100%;
+	overflow:scroll\9; /* Hack para renderizar o scroll no IE8 e em versões inferiores */
+}
+
+img {
+	border: none;
+}
+
+a {
+	color: #0A6380;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #000;
+}
+
+#app {
+	height: 100%;
+}
+
+#wrap {
+	background-color:#FFFFFF;
+	border: 1px solid silver;
+	border-top: none;
+	margin:0 auto;
+	padding:0;
+	min-width: 990px;
+	max-width: 1280px;
+	position: relative;
+	min-height:100%;
+	border-bottom-width: 0px;
+}
+
+#external {
+	height:100%;
+	width:100%;
+	background-color: #FFFFFF;
+	position: relative;
+	padding-bottom: 43px;
+	display:flex;
+  	flex-direction:column;
+}
+
+#header {
+	height: 75px;
+	padding: 0px 0px 0px 0px;
+	background-color: #ffffff;
+	background-image: url(../img/bg_top.png);
+	background-repeat: no-repeat;
+	background-position: top center;
+	padding-top: 7px;
+}
+
+#barra {
+	height: 7px;
+	background: #ffffff url(../img/barra_menu.png) repeat-x; 
+}
+
+#cliente {
+	height: 75px;
+	width: 130px;
+	float: left;
+	padding-left: 0px;
+}
+
+#header #logo_cliente {
+	height: 60px;
+	background: url(../img/logo_cliente.gif) no-repeat;
+	background-position: bottom center;
+}
+
+#link-intranet {
+	height: 30px;
+	width: 115px;
+	position: absolute;
+	top: 22px;
+	left: 8px;
+	cursor: pointer;
+}
+
+
+#header h2 {
+	color: #4F4A4F;
+	font-size: 11px;
+	font-family: Tahoma;
+	font-weight: 100;
+	padding: 1px 0 0 2px;
+	letter-spacing: 0px;
+	line-height: 12px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#info {
+	padding-right: 3px;
+	position: absolute;
+	top:6px;
+	right:0;
+	left:0;
+}
+
+#info table {
+	margin-left: auto;
+}
+
+#menu {
+	float: left;
+    padding-left: 0px;
+    padding-top: 0px;
+    overflow: hidden;
+    height: 73px;
+    position: relative;
+    width: 980px;
+	margin: 10px 0px;
+}
+
+#content {
+	padding: 5px;
+	overflow: auto;
+	background-color: #FFFFFF;
+	clear: both;  
+}
+
+#footer {
+	height: 43px;
+	min-width: 1000x;
+	max-width: 1280px;
+	margin:0 auto;
+	background-image: url(../img/bg_bottom.png);
+	background-position: bottom right;
+	background-repeat: no-repeat; 
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	position: fixed;
+}
+
+/**
+ * Estilos auxiliares.
+ */
+
+.cursor {
+	cursor: pointer;
+}
+
+.padding-right-5px {
+	padding-right: 5px;
+}
+
+
+/* Estilo para as permissões negadas */
+.permissaoNegada {
+	color: red;
+}
+
+/* Estilo para a seleção de imagens do tipo de carrossel */
+.imagemSelecaoTipoCarrossel {
+	margin: 5px;
+	cursor: pointer;
+}
+
+/* Estilo para textos destacados no cadastro de serviços */
+.cadastro-servico-destaque {
+	color: #15428B;
+	font: bold 11px tahoma,arial,helvetica,sans-serif;
+}
+
+/* Estilo para destacar as viagens correntes na grade horária */
+.grade-horaria-viagem-corrente {
+	background-color: #F7F9CA !important;
+    border-color: #EFEA9E;
+}
+
+/* Estilo para destacar as viagens que serão excluídas grade horária */
+.grade-horaria-viagem-excluir {
+    background-color: #FF9393 !important;
+    border-color: #FF0000;
+}
+
+/* Estilo para indicar a posição onde a viagem será inserida */
+.grade-horaria-viagem-inserir-acima {
+	background-color: #D6EBFF !important;
+	border-color: #8DB6CD;
+	border-top: 23px solid #D9FFBA;
+}
+
+/* Estilo para indicar a posição onde a viagem será inserida */
+.grade-horaria-viagem-inserir-abaixo {
+	background-color: #D6EBFF !important;
+	border-color: #8DB6CD;
+	border-bottom: 23px solid #D9FFBA;
+}
+
+/* Estilo para indicar a missão selecionada */
+.grade-horaria-missao-selecionada {
+	background-color: #D6EBFF !important;
+	border-color: #8DB6CD;
+}
+
+/* Estilo para indicar a viagem selecionada para inversão */
+.grade-horaria-inverter-viagem {
+	background-color: #FFDBB2 !important;
+	border-color: #EFB65B;
+}
+
+/* Estilo para indicar a posição da quebra do serviço */
+.grade-horaria-quebra-servico {
+	background-color: #D6EBFF !important;
+	border-color: #8DB6CD;
+	border-top: 4px dashed #F97522;
+}
+
+/* Estilo para indicar a viagem que terá os horários removidos */
+.grade-horaria-remover-horarios {
+	background-color: #EADEF2 !important;
+	border-color: #AEA6E0;
+	color: #EADEF2 !important;
+}
+
+/* Estilo para indicar a célula selecionada da viagem que terá os horários removidos */
+.grade-horaria-remover-horarios-celula-selecionada {
+	background-color: #B8CFEE !important;
+	color: #B8CFEE !important;
+}
+
+/**
+ * Icones
+ */ 
+
+.icn_folder {
+	background-image: url('../icn/folder.gif');
+}
+
+.icn_delete {
+	background-image: url('../icn/delete.gif');
+}
+
+.icn_delete_off {
+	background-image: url('../icn/delete_off.gif');
+}
+
+.icn_add {
+	background-image: url('../icn/add.png');
+}
+
+.icn_edit {
+	background-image: url('../icn/editPage.png');
+}
+
+.icn_ok {
+	background-image: url('../icn/ok.gif');
+}
+
+.icn_light {
+	background-image: url('../icn/light.png');
+}
+
+.icn_copy {
+	background-image: url('../icn/copy.png');
+}
+
+.icn_download {
+	background-image: url('../icn/download.png');
+}
+
+.icn_download_off {
+	background-image: url('../icn/download_off.png');
+}
+
+.icn_upload {
+	background-image: url('../icn/upload.png');
+}
+
+.icn_upload_off {
+	background-image: url('../icn/upload_off.png');
+}
+
+.icn_delete_12x12 {
+	background-image: url('../icn/delete_12x12.png');
+}
+
+.icn_pdf {
+	background-image: url('../icn/pdf.png');
+}
+
+.icn_search {
+	background-image: url('../icn/search.png');
+}
+
+.icn_report {
+	background-image: url('../icn/report.png');
+}
+
+.icn_log {
+	background-image: url('../icn/log.png');
+}
+
+/**
+ * Sobrescrita de estilos do GXT.
+ */
+ 
+.x-form-item-label,
+.x-form-field,
+.x-combo-list-item,
+.x-combo-selected,
+.x-panel-header-text,
+.x-form-cb-label,
+.x-form-group-label {
+	font-size: 11px !important;
+}
+
+#menu .x-btn-tl, 
+#menu .x-btn-tr, 
+#menu .x-btn-tc, 
+#menu .x-btn-ml, 
+#menu .x-btn-mc, 
+#menu .x-btn-bl, 
+#menu .x-btn-br, 
+#menu .x-btn-bc  {
+	background-image: none !important;
+}
+
+#menu .x-btn-mr { 
+	background-image: none !important;
+	background-image: url('../img/menu_separator.png') !important;
+	background-position: right center !important;
+	background-repeat: no-repeat !important;
+}
+
+#menu table td {
+	padding: 0px !important;
+	margin: 0xp !important;
+}
+
+/* Botões do controle de via aérea e via livre cadastro de programação do módulo SISPA*/
+.rede-aerea-botao-vermelho{
+    background-color: red;
+    border: 1px solid red;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    font-size: small;
+    margin: 0;
+    padding: 5px 7px;
+    text-decoration: none;
+    width: 90px;
+    height: 20px;
+}
+
+.rede-aerea-botao-vermelho-legenda{
+	background-color: red;
+	height: 20px;
+	width: 20px;
+	margin-left: 20px;
+	margin-right: 5px;
+}
+
+.rede-aerea-botao-verde{
+    background-color: green;
+    border: 1px solid green;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    font-size: small;
+    margin: 0;
+    padding: 5px 7px;
+    text-decoration: none;
+    width: 90px;
+    height: 20px;
+}
+
+.rede-aerea-botao-verde-legenda{
+	background-color: green;
+	height: 20px;
+	width: 20px;
+	margin-left: 40px;
+	margin-right: 5px;	
+}
+
+.via-livre-botao-cinza{
+    background-color: grey;
+    border: 1px solid grey;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    font-size: small;
+    margin: 0;
+    padding: 5px 7px;
+    text-decoration: none;
+    width: 150px;
+}
+
+.via-livre-botao-cinza-legenda{
+	background-color: grey;
+	height: 20px;
+	width: 20px;
+	margin-left: 20px;
+	margin-right: 5px;
+}
+
+.via-livre-botao-roxo{     
+    background-color: #9966CC;
+    color: white;
+    border: 1px solid #9966CC;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    font-size: small;
+    margin: 0;
+    padding: 5px 7px;
+    text-decoration: none;
+    width: 150px;
+}
+
+.via-livre-botao-roxo-legenda{
+	background-color: #9966CC;	
+	height: 20px;
+	width: 20px;
+	margin-left: 40px;
+	margin-right: 5px;
+}
+
+.rede-aerea-cell-linha-borda{		
+	border-right: 1px solid #99BBe8;	
+	border-bottom: 1px solid #99BBe8;
+	padding: 10px;	
+}
+
+.input-trecho {
+	width: 10px;
+}
+
+.input-portaria-identificacao {
+	font-size: 34px !important;
+	line-height: 50px !important;
+}
+
+.input-portaria-normal {
+	font-size: 16px !important;
+	float: left;
+}
+
+.input-portaria-normal-arrow{
+	height: 24px !important;
+}
+
+.input-portaria-normal-invisible-arrow{
+	display: none;
+}
+
+.label-portaria-veiculo-sem-solicitacao {
+	color: #C11D1D;
+	font-size: 16px !important;
+}
+
+.label-radiobutton-portaria {
+	font-size: 16px !important;
+	margin-left: 3px;
+    top: 4px !important;
+}
+.info-programacao {
+    color: #15428B;
+    font-size: 14px !important;
+    font-weight: bold;
+    position: absolute;
+    top: 190px;
+}
+.titulo-paineis-pesquisa {
+	font-size: 14px !important;
+	color: #15428B;
+	font-weight: bold;
+}
+.rede-aerea-tabela-labels td{
+	width: 47px;
+	text-align: center;
+}
+
+/* CSS da div que mostra o exemplo da cor que foi adicionada no field no form FrmPortariaManutencao. */
+.div-exemplo-cor {
+	height: 20px; 
+	width: 20px; 
+	background-color: rgb(255, 255, 255); 
+	margin-top: 21px; 
+	margin-left: 20px;
+}
+
+.destaque-conflito-planilha-alocacao {
+	color: red;
+}
+							
+.overflow-grid .x-grid3-cell-inner, .overflow-grid .x-grid3-hd-inner {
+    white-space: normal !important;
+}
+
+.resultado-teste-grade-horaria {
+    background-color: #FFFFFF;
+    font-family: lucida Console;
+    height: 412px;
+    overflow: auto;
+    padding: 10px;
+}
+
+.resultado-teste-grade-horaria pre {
+	font-family: lucida Console;
+}
+
+#botao-esquerdo-menu {
+	margin: 25px 0px 0px 5px;
+	width: 31px;
+	height: 40px;
+	float: left;	
+	visibility: hidden;
+}
+
+#botao-direito-menu {
+	margin: 25px 5px 0px 0px;
+	width: 31px;
+	height: 40px;
+	float: left;
+	visibility: hidden;	
+}
+
+.botao-esquerdo-ativo {
+}
+
+.botao-esquerdo-inativo {
+	cursor: default;
+}
+
+.botao-direito-ativo {
+}
+
+.botao-direito-inativo {
+	cursor: default;
+}
+
+.botao-esquerdo-ativo, .botao-direito-ativo {
+	cursor: pointer;
+}
+
+.botao-esquerdo-inativo, .botao-direito-inativo {
+	cursor: default;
+}
+
+#menu .x-btn-text img {
+	left: 21px !important;
+}
+
+.pcefs-grupo .x-fieldset-header {
+    color: #000000;
+    font: 11px tahoma,arial,helvetica,sans-serif;
+}
+
+.align_right{
+	text-align: right;
+}
+
+.grade-horaria-configuracao-servico-container .grade-horaria-configuracao-servico:last-child {
+	border-bottom: 1px solid #C0C0C0;
+}
+
+.grade-horaria-configuracao-servico.via-indefinida:before {
+    background-color: #C0C0C0;
+}
+
+.grade-horaria-configuracao-servico.via-1:before {
+    background-color: #B0C4DE;
+}
+
+.grade-horaria-configuracao-servico.via-2:before {
+	background-color: #F5DEB3;
+}
+
+.grade-horaria-configuracao-servico.via-indefinida:before, .grade-horaria-configuracao-servico.via-1:before, .grade-horaria-configuracao-servico.via-2:before {
+    bottom: -1px;
+    content: "";
+    display: inline-block;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 12px;
+    z-index: -1;
+}
+
+.grade-horaria-configuracao-servico {
+    border-left: 0 none;
+    border-right: 1px solid #C0C0C0;
+    border-top: 1px solid #C0C0C0;
+    padding: 10px 10px 10px 50px;
+    position: relative;
+    z-index: 1;
+}
+
+.grade-horaria-configuracao-servico:after {
+	background-color: #FFFFFF;
+	border-right: 1px solid #C0C0C0;
+	bottom: 0;
+	content: "";
+	display: block;
+	left: 12px;
+	position: absolute;
+	top: 0;
+	width: 27px;
+	z-index: -1;
+}
+
+.grade-horaria-configuracao-servico-identificacao {
+    left: 12px;
+    margin-top: -6px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 27px;
+}
+
+.x-window-body ul {
+	list-style: disc inside none;
+    margin-left: 10px;
+}
+
+.label-data-selecao-tue{
+    font-weight: bold !important;
+    font-size: 24px !important;
+}
+
+.menu-principal .x-grid3-cell-inner, .menu-principal .x-tree3-node-text {
+    color: #15428B;
+    font-weight: bold;
+}
+
+#grid-historico-programacao td div{
+	white-space: normal !important;
+}
+
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    .x-grid3-row td.x-grid3-cell {
+    	padding-left: 0 !important;
+    	padding-right: 0 !important;
+    }
+}
