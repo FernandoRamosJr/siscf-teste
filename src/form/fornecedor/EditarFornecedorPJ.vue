@@ -64,7 +64,7 @@
           <div class="col-4">
             <div class="form-group">
               <label for="organizacao">CNPJ*</label>
-              <input class="form-control" v-model="cnpj" @input="formatCnpj" required/>
+              <input class="form-control" v-model="cnpj" @input="formatCnpj" @blur="validarCNPJ(cnpj)" required/>
             </div>
           </div>
 
@@ -175,7 +175,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
+            <router-link to="/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
             <input type="button" class="btn btn-success" value="Salvar" @click="editarFornecedorSalvar">
           </div>
         </div>
@@ -194,6 +194,7 @@ import {
   editarFornecedorPjBuscar,
   editarFornecedorPjSalvar
 } from "@/service/fornecedor.service";
+
 export default {
   name: "EditarFornecedorForm",
   components: {
@@ -202,6 +203,7 @@ export default {
     Dialog,
     ProgressBar
   },
+
   data() {
     return {
       iniciaProgressBar: false,
@@ -221,8 +223,10 @@ export default {
         uf: "",
       },
       validaCampos: false,
+      cnpjValido: false,
     };
   },
+
   methods: {
     fecharRetornoOperacao(){
       this.retornoOperacao = false;
@@ -276,21 +280,80 @@ export default {
       this.cnpj = inputValue;
     },
 
-    formatCpf(event) {
-      let inputValue = event.target.value.replace(/\D/g, '');
-      if (inputValue.length > 11) {
-        inputValue = inputValue.slice(0, 11);
+    validarCNPJ(cnpj) {
+      // Remover caracteres não numéricos
+      cnpj = cnpj.replace(/\D/g, '');
+
+      if(cnpj == '') {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
       }
 
-      if (inputValue.length > 9) {
-        inputValue = inputValue.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, '$1.$2.$3-$4');
-      } else if (inputValue.length > 6) {
-        inputValue = inputValue.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
-      } else if (inputValue.length > 3) {
-        inputValue = inputValue.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
+
+      if (cnpj.length != 14) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
       }
 
-      this.cpf = inputValue;
+      // Elimina CNPJs invalidos conhecidos
+      if (cnpj == "00000000000000" ||
+          cnpj == "11111111111111" ||
+          cnpj == "22222222222222" ||
+          cnpj == "33333333333333" ||
+          cnpj == "44444444444444" ||
+          cnpj == "55555555555555" ||
+          cnpj == "66666666666666" ||
+          cnpj == "77777777777777" ||
+          cnpj == "88888888888888" ||
+          cnpj == "99999999999999") {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Valida DVs
+      let tamanho = cnpj.length - 2
+      let numeros = cnpj.substring(0,tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(0)) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0,tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(1)) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // CNPJ é válido
+      this.cnpjValido = true;
     },
 
     formatCep(event) {
@@ -362,24 +425,8 @@ export default {
     validarCamposObrigatorios() {
       let camposFaltando = [];
 
-      console.log(camposFaltando.length)
-
-      console.log(this.fornecedor.razaoSocial)
-      console.log(this.fornecedor.nomeFantasia)
-      console.log(this.cnpj)
-      console.log(this.fornecedor.email)
-      console.log(this.foneComercialPrincipal)
-      console.log(this.camposCep.logradouro)
-      console.log(this.fornecedor.numero)
-      console.log(this.camposCep.bairro)
-      console.log(this.camposCep.localidade)
-      console.log(this.camposCep.uf)
-      console.log(this.fornecedor.cep)
-
-
       // Validação para pessoa jurídica
       if (!this.fornecedor.razaoSocial) camposFaltando.push("Razão Social");
-      if (!this.fornecedor.nomeFantasia) camposFaltando.push("Nome Fantasia");
       if (!this.cnpj) camposFaltando.push("CNPJ");
       if (!this.fornecedor.email) camposFaltando.push("E-mail");
       if (!this.foneComercialPrincipal) camposFaltando.push("Telefone Comercial");
@@ -401,6 +448,12 @@ export default {
       this.validarCamposObrigatorios()
       if (!this.validaCampos) {
         this.msgRetornoOperacao = "Por favor, preencha todos os campos obrigatórios.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      if (!this.cnpjValido) {
+        this.msgRetornoOperacao = "CNPJ inválido.";
         this.retornoOperacao = true;
         return;
       }
@@ -444,6 +497,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.editarFornecedorBuscar(this.$route.params.id);
   },

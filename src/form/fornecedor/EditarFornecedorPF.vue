@@ -86,14 +86,14 @@
             <div class="col-3">
               <div class="form-group">
                 <label for="organizacao">CPF*</label>
-                <input class="form-control" v-model="cpf" @input="formatCpf" />
+                <input class="form-control" v-model="cpf" @input="formatCpf" @blur="validarCPF(cpf)" />
               </div>
             </div>
 
             <div class="col-2">
               <div class="form-group">
-                <label for="organizacao">Emissão CPF*</label>
-                <input type="date" class="form-control" v-model="this.fornecedor.dataEmissaoCpf"/>
+                <label for="organizacao">UF Emissão CPF*</label>
+                <input class="form-control" v-model="this.fornecedor.ufEmissaoCpf"/>
               </div>
             </div>
             <div class="col-2">
@@ -181,7 +181,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
+            <router-link to="/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
             <input type="button" class="btn btn-success" value="Salvar" @click="editarFornecedorSalvar">
           </div>
         </div>
@@ -196,6 +196,7 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressBar from 'primevue/progressbar';
 import {buscaCepViaCep, editarFornecedorPfBuscar, editarFornecedorPfSalvar} from "@/service/fornecedor.service";
+
 export default {
   name: "EditarFornecedorForm",
   components: {
@@ -204,6 +205,7 @@ export default {
     Dialog,
     ProgressBar
   },
+
   data() {
     return {
       iniciaProgressBar: false,
@@ -222,8 +224,10 @@ export default {
         localidade: "",
         uf: "",
       },
+      cpfValido: false,
     };
   },
+
   methods: {
     fecharRetornoOperacao(){
       this.retornoOperacao = false;
@@ -294,6 +298,54 @@ export default {
       this.cpf = inputValue;
     },
 
+    validarCPF(cpf) {
+      console.log(cpf)
+      // Remover caracteres não numéricos
+      cpf = cpf.replace(/[^\d]/g, '');
+
+      if (/^(\d)\1{10}$/.test(cpf)) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Verificar se o CPF tem 11 dígitos
+      if (cpf.length !== 11) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Calcular os dígitos verificadores
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+
+      let resto = soma % 11;
+      let digito1 = resto < 2 ? 0 : 11 - resto;
+
+      soma = 0;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+
+      resto = soma % 11;
+      let digito2 = resto < 2 ? 0 : 11 - resto;
+
+      // Verificar se os dígitos verificadores são iguais aos dígitos no CPF
+      if (parseInt(cpf.charAt(9)) !== digito1 || parseInt(cpf.charAt(10)) !== digito2) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      this.cpfValido = true;
+    },
+
     formatCep(event) {
       let inputValue = event.target.value.replace(/\D/g, '');
       if (inputValue.length > 8) {
@@ -346,7 +398,7 @@ export default {
             "orgaoEmissor": this.fornecedor.orgaoEmissor,
             "dataEmissaoIdentidade": this.fornecedor.dataEmissaoIdentidade,
             "cpf": this.cpf,
-            "dataEmissaoCpf": this.fornecedor.dataEmissaoCpf,
+            "ufEmissaoCpf": this.fornecedor.ufEmissaoCpf,
             "logradouro": this.camposCep.logradouro,
             "numero": this.fornecedor.numero,
             "complemento": this.fornecedor.complemento,
@@ -384,6 +436,12 @@ export default {
         return;
       }
 
+      if (!this.cpfValido) {
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
       const payload = this.montarFornecedorPessoaFisicaModelEditar();
       this.iniciaProgressBar = true;
 
@@ -409,7 +467,6 @@ export default {
         this.fornecedor = await editarFornecedorPfBuscar(id, this.$toast);
 
         this.fornecedor.dataNascimento = this.formatarData(this.fornecedor.dataNascimento);
-        this.fornecedor.dataEmissaoCpf = this.formatarData(this.fornecedor.dataEmissaoCpf);
         this.fornecedor.dataEmissaoIdentidade = this.formatarData(this.fornecedor.dataEmissaoIdentidade);
 
         this.cpf = this.fornecedor.cpf;
@@ -427,6 +484,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.editarFornecedorBuscar(this.$route.params.id);
   },

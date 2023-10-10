@@ -8,8 +8,7 @@
 
 <script>
 export default {
-  name: 'RodapeForm', // Nome do componente agora é composto por várias palavras
-  // Outras opções e código do componente
+  name: 'RodapeForm',
 }
 </script>
 

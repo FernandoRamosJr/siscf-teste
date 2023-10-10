@@ -67,7 +67,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/home" class="btn btn-primary" style="margin-right: 10px">Voltar</router-link>
+            <router-link to="/home" class="btn btn-primary" style="margin-right: 10px">Voltar</router-link>
             <router-link to="novoProduto" class="btn btn-success">Novo Produto</router-link>
           </div>
         </div>

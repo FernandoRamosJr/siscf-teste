@@ -1,3 +1,3 @@
 <template>
-    <div>Módulo PNE --- Recurso não encontrado.</div>
+    <div>Recurso não encontrado.</div>
 </template>

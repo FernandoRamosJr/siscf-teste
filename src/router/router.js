@@ -11,11 +11,13 @@ import NovoProduto from "@/form/produto/NovoProduto.vue";
 import EditarProduto from "@/form/produto/EditarProduto.vue";
 import EditarFornecedorPF from "@/form/fornecedor/EditarFornecedorPF.vue";
 import EditarFornecedorPJ from "@/form/fornecedor/EditarFornecedorPJ.vue";
+import Entrada from "@/form/estoque/entrada/Entrada.vue";
+import Saida from "@/form/estoque/saida/Saida.vue";
 
 
 const routes = [ 
   {
-    path: "/siscf-web/home",
+    path: "/home",
     name: "Home",
     component: Home,
   },
@@ -25,44 +27,54 @@ const routes = [
     component: Home,
   },  
   {
-    path: "/siscf-web/login",
+    path: "/login",
     name: "Login",
     component: Login,
   },
   {
-    path: "/siscf-web/fornecedor",
+    path: "/fornecedor",
     name: "Fornecedor",
     component: Fornecedor,
   },
   {
-    path: "/siscf-web/novoFornecedor",
+    path: "/novoFornecedor",
     name: "novoFornecedor",
     component: NovoFornecedor,
   },
   {
-    path: "/siscf-web/editarFornecedorPF/:id",
+    path: "/editarFornecedorPF/:id",
     name: "editarFornecedorPF",
     component: EditarFornecedorPF,
   },
   {
-    path: "/siscf-web/editarFornecedorPJ/:id",
+    path: "/editarFornecedorPJ/:id",
     name: "editarFornecedorPJ",
     component: EditarFornecedorPJ,
   },
   {
-    path: "/siscf-web/produto",
+    path: "/produto",
     name: "produto",
     component: Produto,
   },
   {
-    path: "/siscf-web/novoProduto",
+    path: "/novoProduto",
     name: "novoProduto",
     component: NovoProduto,
   },
   {
-    path: "/siscf-web/editarProduto/:id",
+    path: "/editarProduto/:id",
     name: "editarProduto",
     component: EditarProduto,
+  },
+  {
+    path: "/entrada",
+    name: "entrada",
+    component: Entrada,
+  },
+  {
+    path: "/saida",
+    name: "saida",
+    component: Saida,
   },
   {
     path: '/:catchAll(.*)',

@@ -45,6 +45,19 @@ export async function editarProdutoBuscar(id, $toast) {
         });
 }
 
+export async function carregarListaDeProdutosAutoComplete(payload) {
+    console.log("Função: " +payload)
+    return axios
+        .post("http://localhost:3004/siscf-api/produto/produtoPorNomeCategoria", payload)
+        .then((response) => {
+            return (response.data) ? response.data : null
+        })
+        .catch((e) => {
+            console.log(e);
+            return null;
+        });
+}
+
 export async function editarProdutoSalvar(payload, $toast) {
     return axios
         .put(`http://localhost:3004/siscf-api/produto/editarProduto`, payload)

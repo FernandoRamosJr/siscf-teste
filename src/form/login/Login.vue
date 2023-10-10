@@ -12,7 +12,7 @@
             <div class="col-2">
               <div class="form-group">
                 <label class="control-label">Login</label>
-                <input class="form-control form-control-xs" id="usuario" type="text" size="40" v-model="login">
+                <input class="form-control form-control-xs" id="usuario" type="text" size="40" v-model="login"/>
               </div>
             </div>
           </div>
@@ -21,7 +21,7 @@
             <div class="col-2">
               <div class="form-group">
                 <label class="control-label">Senha</label>
-                <input class="form-control form-control-xs" id="senha" type="password" size="40" v-model="senha">
+                <input class="form-control form-control-xs" id="senha" type="password" size="40" v-model="senha"/>
               </div>
             </div>
           </div>
@@ -41,16 +41,10 @@
 <script>
 
 import axios from "../../http-common";
-/*import BtnEntrar from '../../components/buttons/BtnEntrar.vue'*/
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
-
 export default {
-  components: {
-    /*BtnEntrar*/
-  },
-
   name: "LoginForm",
   data() {
     return {
@@ -60,9 +54,7 @@ export default {
   },
 
   methods: {
-    /* eslint-disable no-console */
-
-  callLogin(){
+    callLogin(){
       if(this.login === ""){
         this.$toast.add({severity:'warn', summary: 'Alerta', detail:'O seguinte campo é obrigatório e não foi preenchido: Login', life: 3000});
         return null;
@@ -79,20 +71,18 @@ export default {
             password:this.senha
         })
         .then(response => {
-          var retorno = response.data;
+          let retorno = response.data;
 
-            if (retorno == "erro"){
+            if (retorno === "erro"){
               this.$toast.add({severity:'error', summary: 'Erro', detail:'O usuário ou senha informados estão incorretos.', life: 3000});
 
             }else{
               const token = retorno.token;
               const userDetails = retorno.userDetails;
 
-
               sessionStorage.setItem('token', token);
               sessionStorage.setItem('userDetails', JSON.stringify(userDetails));
 
-              this.existeToken = true;
               this.$store.dispatch('login');
               if(this.$route.query.redirect) {
                   this.$router.push({ path: this.$route.query.redirect});
@@ -106,11 +96,8 @@ export default {
           console.log(e);
         });
 
-  }
-
-
+    }
   },
-    /* eslint-enable no-console */
 
   mounted() {
     this.$store.dispatch('atualizarAppAmbiente', "DEVNOVOJAVA");
@@ -119,11 +106,9 @@ export default {
   setup() {
     const store = useStore();
     const appAmbiente = computed(() => store.state.appAmbiente);
-
     return {
       appAmbiente
     }
   }
 }
-
 </script>

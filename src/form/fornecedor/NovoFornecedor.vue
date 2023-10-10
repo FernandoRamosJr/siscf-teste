@@ -80,7 +80,7 @@
 
             <div class="col-6">
               <div class="form-group">
-                <label for="organizacao">Nome Fantasia*</label>
+                <label for="organizacao">Nome Fantasia</label>
                 <input class="form-control" v-model="nomeFantasia" required/>
               </div>
             </div>
@@ -90,7 +90,7 @@
             <div class="col-4">
               <div class="form-group">
                 <label for="organizacao">CNPJ*</label>
-                <input class="form-control" v-model="cnpj" @input="formatCnpj" required/>
+                <input class="form-control" v-model="cnpj" @input="formatCnpj" @blur="validarCNPJ(cnpj)" required/>
               </div>
             </div>
 
@@ -120,7 +120,7 @@
             <div class="col-3">
               <div class="form-group">
                 <label for="organizacao">E-mail*</label>
-                <input class="form-control" v-model="emailJuridico" required/>
+                <input class="form-control" v-model="emailJuridico" @blur="validarEmail(emailJuridico)" required/>
               </div>
             </div>
 
@@ -139,7 +139,6 @@
             </div>
           </div>
         </div>
-
 
         <div v-if="!isPessoaJuridica">
           <div class="row mt-4">
@@ -160,7 +159,7 @@
             <div class="col-3">
               <div class="form-group">
                 <label for="organizacao">E-mail*</label>
-                <input class="form-control" v-model="emailFisico" />
+                <input class="form-control" v-model="emailFisico" @blur="validarEmail(emailFisico)"/>
               </div>
             </div>
 
@@ -183,14 +182,14 @@
             <div class="col-3">
               <div class="form-group">
                 <label for="organizacao">CPF*</label>
-                <input class="form-control" v-model="cpf" @input="formatCpf" />
+                <input class="form-control" v-model="cpf" @input="formatCpf" @blur="validarCPF(cpf)"/>
               </div>
             </div>
 
             <div class="col-2">
               <div class="form-group">
-                <label for="organizacao">Emissão CPF*</label>
-                <input type="date" class="form-control" v-model="dataEmissaoCpf" />
+                <label for="organizacao">UF Emissão CPF*</label>
+                <input class="form-control" v-model="ufEmissaoCpf" />
               </div>
             </div>
             <div class="col-2">
@@ -278,7 +277,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
+            <router-link to="/fornecedor" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
             <input type="button" class="btn btn-success" value="Salvar" @click="fornecedorSalvar">
           </div>
         </div>
@@ -297,6 +296,7 @@ import {
   fornecedorPessoaFisicaSalvar,
   fornecedorPessoaJuridicaSalvar,
 } from "@/service/fornecedor.service";
+
 export default {
   name: "NovoFornecedorForm",
   components: {
@@ -305,6 +305,7 @@ export default {
     Dialog,
     ProgressBar
   },
+
   data() {
     return {
       isPessoaJuridica: true,
@@ -327,9 +328,13 @@ export default {
       foneComercialSecundario: "",
       foneComercialPrincipal: "",
       emailJuridico: "",
-      emailFisico: ""
+      emailFisico: "",
+      cpfValido: false,
+      cnpjValido: false,
+      emailValido: false,
     };
   },
+
   methods: {
     fecharRetornoOperacao(){
       this.retornoOperacao = false;
@@ -362,6 +367,82 @@ export default {
       this.cnpj = inputValue;
     },
 
+    validarCNPJ(cnpj) {
+      // Remover caracteres não numéricos
+      cnpj = cnpj.replace(/\D/g, '');
+
+      if(cnpj == '') {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CNPJ inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+
+      if (cnpj.length != 14) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CNPJ inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Elimina CNPJs invalidos conhecidos
+      if (cnpj == "00000000000000" ||
+          cnpj == "11111111111111" ||
+          cnpj == "22222222222222" ||
+          cnpj == "33333333333333" ||
+          cnpj == "44444444444444" ||
+          cnpj == "55555555555555" ||
+          cnpj == "66666666666666" ||
+          cnpj == "77777777777777" ||
+          cnpj == "88888888888888" ||
+          cnpj == "99999999999999") {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CNPJ inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Valida DVs
+      let tamanho = cnpj.length - 2
+      let numeros = cnpj.substring(0,tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(0)) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CNPJ inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0,tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(1)) {
+        this.cnpjValido = false;
+        this.msgRetornoOperacao = "CNPJ inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // CNPJ é válido
+      this.cnpjValido = true;
+    },
+
     formatCpf(event) {
       let inputValue = event.target.value.replace(/\D/g, '');
       if (inputValue.length > 11) {
@@ -377,6 +458,65 @@ export default {
       }
 
       this.cpf = inputValue;
+    },
+
+    validarCPF(cpf) {
+      console.log(cpf)
+      // Remover caracteres não numéricos
+      cpf = cpf.replace(/[^\d]/g, '');
+
+      if (/^(\d)\1{10}$/.test(cpf)) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Verificar se o CPF tem 11 dígitos
+      if (cpf.length !== 11) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      // Calcular os dígitos verificadores
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+
+      let resto = soma % 11;
+      let digito1 = resto < 2 ? 0 : 11 - resto;
+
+      soma = 0;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+
+      resto = soma % 11;
+      let digito2 = resto < 2 ? 0 : 11 - resto;
+
+      // Verificar se os dígitos verificadores são iguais aos dígitos no CPF
+      if (parseInt(cpf.charAt(9)) !== digito1 || parseInt(cpf.charAt(10)) !== digito2) {
+        this.cpfValido = false;
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
+      this.cpfValido = true;
+    },
+
+    validarEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(email)) {
+        this.emailValido = false;
+        this.msgRetornoOperacao = "E-mail inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
     },
 
     formatCep(event) {
@@ -471,7 +611,7 @@ export default {
             "orgaoEmissor": this.orgaoEmissor,
             "dataEmissaoIdentidade": this.dataEmissaoIdentidade,
             "cpf": this.cpf,
-            "dataEmissaoCpf": this.dataEmissaoCpf,
+            "ufEmissaoCpf": this.ufEmissaoCpf,
 
             "logradouro": this.camposCep.logradouro,
             "numero": this.numero,
@@ -493,7 +633,6 @@ export default {
       if (this.isPessoaJuridica) {
         // Validação para pessoa jurídica
         if (!this.razaoSocial) camposFaltando.push("Razão Social");
-        if (!this.nomeFantasia) camposFaltando.push("Nome Fantasia");
         if (!this.cnpj) camposFaltando.push("CNPJ");
         if (!this.email) camposFaltando.push("E-mail");
         if (!this.foneComercialPrincipal) camposFaltando.push("Telefone Comercial");
@@ -518,7 +657,6 @@ export default {
 
       return camposFaltando;
     },
-
 
     async fornecedorSalvar() {
       if (this.isPessoaJuridica) {
@@ -556,13 +694,19 @@ export default {
       this.iniciaProgressBar = false;
     },
 
-
     async fornecedorPessoaFisicaSalvar(payload) {
       if (!this.validarCamposObrigatorios()) {
         this.msgRetornoOperacao = "Por favor, preencha todos os campos obrigatórios.";
         this.retornoOperacao = true;
         return;
       }
+
+      if (!this.cpfValido) {
+        this.msgRetornoOperacao = "CPF inválido.";
+        this.retornoOperacao = true;
+        return;
+      }
+
       this.iniciaProgressBar = true;
 
       try {

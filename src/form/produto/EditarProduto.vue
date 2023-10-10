@@ -44,7 +44,17 @@
         </div>
 
         <div class="row mt-3">
-          <div class="col-4">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="categoria">Categoria</label>
+              <select required class="form-select" v-model="produto.categoriaProduto">
+                <option value="">...</option>
+                <option v-for="categoria in array_categorias" :key="categoria" :value="categoria">{{ categoria }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-3">
             <div class="form-group">
               <label for="organizacao">Nome</label>
               <input class="form-control" v-model="this.produto.nomeProduto" required/>
@@ -53,6 +63,16 @@
           </div>
 
           <div class="col-2">
+            <div class="form-group">
+              <label for="quantidade">Quantidade</label>
+              <select required class="form-select" v-model="produto.quantidadeProduto">
+                <option value="">...</option>
+                <option v-for="quantidade in array_quantidades" :key="quantidade" :value="quantidade">{{ quantidade }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-1">
             <div class="form-group">
               <label for="organizacao">Saldo</label>
               <input class="form-control" v-model="this.produto.saldo" required/>
@@ -68,7 +88,7 @@
             </div>
           </div>
 
-          <div class="col-4">
+          <div class="col-2">
             <div class="form-group">
               <label for="organizacao">Observação</label>
               <input class="form-control" v-model="this.produto.observacao" required/>
@@ -80,7 +100,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/produto" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
+            <router-link to="/produto" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
             <input type="button" class="btn btn-success" value="Salvar" @click="editarProdutoSalvar">
           </div>
         </div>
@@ -109,7 +129,25 @@ export default {
       msgRetornoOperacao: "",
       retornoOperacao: false,
       produto: "",
-      produtoModel: {}
+      produtoModel: {},
+      array_categorias :
+          [
+            "Insumos",
+            "Cosmiatria",
+            "Medicamentos",
+            "Imunologia",
+          ],
+      array_quantidades :
+          [
+            "Unidade(s)",
+            "Caixa(s)",
+            "Quilo(s)",
+            "Pacote(s)",
+            "Litro(s)",
+            "Mililitro(s)",
+            "Rolo(s)",
+            "Frasco(s)",
+          ],
     };
   },
   methods: {
@@ -129,6 +167,8 @@ export default {
       this.produtoModel =
           {
             "idProduto": this.produto.idProduto,
+            "categoriaProduto": this.produto.categoriaProduto,
+            "quantidadeProduto": this.produto.quantidadeProduto,
             "nomeProduto": this.produto.nomeProduto,
             "cadastro": this.produto.cadastro,
             "saldo": this.produto.saldo,

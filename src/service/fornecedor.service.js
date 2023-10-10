@@ -30,8 +30,7 @@ export async function carregarListaDeFornecedoresPj($toast) {
 
 export async function fornecedorPessoaJuridicaSalvar(payload) {
     try {
-        const response = await axios.post(`http://localhost:3004/siscf-api/pj/criarFornecedor`, payload);
-        return response;
+        return await axios.post(`http://localhost:3004/siscf-api/pj/criarFornecedor`, payload);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -41,8 +40,7 @@ export async function fornecedorPessoaJuridicaSalvar(payload) {
 
 export async function fornecedorPessoaFisicaSalvar(payload) {
     try {
-        const response = await axios.post(`http://localhost:3004/siscf-api/pf/criarFornecedor`, payload);
-        return response;
+        return await axios.post(`http://localhost:3004/siscf-api/pf/criarFornecedor`, payload);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -77,8 +75,7 @@ export async function editarFornecedorPjBuscar(id, $toast) {
 
 export async function editarFornecedorPjSalvar(payload) {
     try {
-        const response = await axios.put(`http://localhost:3004/siscf-api/pj/editarFornecedor`, payload);
-        return response;
+        return await axios.put(`http://localhost:3004/siscf-api/pj/editarFornecedor`, payload);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -87,8 +84,7 @@ export async function editarFornecedorPjSalvar(payload) {
 
 export async function editarFornecedorPfSalvar(payload) {
     try {
-        const response = await axios.put(`http://localhost:3004/siscf-api/pf/editarFornecedor`, payload);
-        return response;
+        return await axios.put(`http://localhost:3004/siscf-api/pf/editarFornecedor`, payload);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -97,8 +93,7 @@ export async function editarFornecedorPfSalvar(payload) {
 
 export async function excluirFornecedorPj(id) {
     try {
-        const response = await axios.delete(`http://localhost:3004/siscf-api/pj/excluirFornecedor/${id}`);
-        return response;
+        return await axios.delete(`http://localhost:3004/siscf-api/pj/excluirFornecedor/${id}`);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -107,8 +102,7 @@ export async function excluirFornecedorPj(id) {
 
 export async function excluirFornecedorPf(id) {
     try {
-        const response = await axios.delete(`http://localhost:3004/siscf-api/pf/excluirFornecedor/${id}`);
-        return response;
+        return await axios.delete(`http://localhost:3004/siscf-api/pf/excluirFornecedor/${id}`);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;
@@ -117,8 +111,7 @@ export async function excluirFornecedorPf(id) {
 
 export async function buscaCepViaCep(cep) {
     try {
-        const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-        return response;
+        return await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
     } catch (error) {
         // Tratar erros aqui, se necessário
         return error.response;

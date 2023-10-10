@@ -113,7 +113,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/home" class="btn btn-primary" style="margin-right: 10px">Voltar</router-link>
+            <router-link to="/home" class="btn btn-primary" style="margin-right: 10px">Voltar</router-link>
             <router-link to="novoFornecedor" class="btn btn-success">Novo Fornecedor</router-link>
           </div>
         </div>
@@ -132,6 +132,7 @@ import {
   excluirFornecedorPf, excluirFornecedorPj
 } from "@/service/fornecedor.service";
 
+
 export default {
   name: "FornecedorForm",
   components: {
@@ -140,6 +141,7 @@ export default {
     Dialog,
     ProgressBar
   },
+
   data() {
     return {
       iniciaProgressBar: false,
@@ -154,6 +156,7 @@ export default {
       targetVariableFornecedorExcluir: "",
     };
   },
+
   methods: {
     fecharRetornoOperacao(){
       this.retornoOperacao = false;
@@ -164,29 +167,12 @@ export default {
       this.confirmaExcluir = false;
     },
 
-    formatarTelefone(telefone) {
-      const codigoArea = telefone.slice(0, 2);
-      const parte1 = telefone.slice(2, 7);
-      const parte2 = telefone.slice(7, 11);
-      return `(${codigoArea})${parte1}-${parte2}`;
-    },
-
-    formatarCnpj(cnpj) {
-      // Formatar CNPJ: XX.XXX.XXX/XXXX-XX
-      return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-    },
-    formatarCpf(cpf) {
-      // Formatar CPF: XXX.XXX.XXX-XX
-      return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
-    },
-
     confirmaExcluirFornecedor(id, targetVariable) {
       this.idFornecedorExcluir = id;
       this.targetVariableFornecedorExcluir = targetVariable;
       this.msgConfirmaExcluir = "Deseja excluir o fornecedor?";
       this.confirmaExcluir = true;
     },
-
 
     async carregarListaDeFornecedoresPF() {
       try {
@@ -239,6 +225,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.carregarListaDeFornecedoresPF();
     this.carregarListaDeFornecedoresPJ();

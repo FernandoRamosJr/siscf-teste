@@ -45,15 +45,36 @@
         </div>
 
         <div class="row mt-3">
-          <div class="col-4">
+          <div class="col-2">
+            <div class="form-group">
+              <label for="categoria">Categoria</label>
+              <select required class="form-select" v-model="categoriaProduto">
+                <option value="">...</option>
+                <option v-for="categoria in array_categorias" :key="categoria" :value="categoria">{{ categoria }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-3">
             <div class="form-group">
               <label for="organizacao">Nome</label>
-              <input class="form-control" v-model="nomeProduto" required/>
+              <Field class="form-control" name="nomeProduto" v-model="nomeProduto"/>
+              <ErrorMessage class="form-required" name="nomeProduto" />
               <div class="invalid-feedback"></div>
             </div>
           </div>
 
           <div class="col-2">
+            <div class="form-group">
+              <label for="quantidade">Quantidade</label>
+              <select required class="form-select" v-model="quantidadeProduto">
+                <option value="">...</option>
+                <option v-for="quantidade in array_quantidades" :key="quantidade" :value="quantidade">{{ quantidade }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-1">
             <div class="form-group">
               <label for="organizacao">Saldo</label>
               <input class="form-control" v-model="saldo" required/>
@@ -69,7 +90,7 @@
             </div>
           </div>
 
-          <div class="col-4">
+          <div class="col-2">
             <div class="form-group">
               <label for="organizacao">Observação</label>
               <input class="form-control" v-model="observacao" required/>
@@ -81,7 +102,7 @@
         <div class="row mt-4">
           <div class="col-12">
             <hr/>
-            <router-link to="/siscf-web/produto" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
+            <router-link to="/produto" class="btn btn-danger" style="margin-right: 10px">Cancelar</router-link>
             <input type="button" class="btn btn-success" value="Salvar" @click="produtoSalvar">
           </div>
         </div>
@@ -95,6 +116,9 @@ import Menu from '../../components/Menu.vue'
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressBar from 'primevue/progressbar';
+
+import { Field, ErrorMessage } from "vee-validate";
+
 import {produtoSalvar} from "@/service/produto.service";
 export default {
   name: "NovoProdutoForm",
@@ -102,7 +126,9 @@ export default {
     Menu,
     Button,
     Dialog,
-    ProgressBar
+    ProgressBar,
+    Field,
+    ErrorMessage
   },
   data() {
     return {
@@ -116,10 +142,35 @@ export default {
       saldo: "",
       estoqueMinimo: "",
       observacao: "",
-      produtoModel: {}
+      produtoModel: {},
+      array_categorias :
+      [
+        "Insumos",
+        "Cosmiatria",
+        "Medicamentos",
+        "Imunologia",
+      ],
+      array_quantidades :
+      [
+        "Unidade(s)",
+        "Caixa(s)",
+        "Quilo(s)",
+        "Pacote(s)",
+        "Litro(s)",
+        "Mililitro(s)",
+        "Rolo(s)",
+        "Frasco(s)",
+      ],
     };
   },
   methods: {
+    isRequired(value) {
+      if (value && value.trim()) {
+        return true;
+      }
+      return 'This is required';
+    },
+
     fecharRetornoOperacao(){
       this.retornoOperacao = false;
     },
@@ -136,6 +187,8 @@ export default {
       this.produtoModel =
           {
             "idProduto": this.idProduto,
+            "categoriaProduto": this.categoriaProduto,
+            "quantidadeProduto": this.quantidadeProduto,
             "nomeProduto": this.nomeProduto,
             "cadastro": this.cadastro,
             "saldo": this.saldo,
