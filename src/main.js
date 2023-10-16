@@ -15,7 +15,6 @@ import "primeicons/primeicons.css"                           //icons
 import ToastService from 'primevue/toastservice';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
-import { veeValidation } from 'vee-validate';
 
 
 const store = createStore({
@@ -61,7 +60,6 @@ const store = createStore({
 });
 
 const app = createApp(App);
-app.use(veeValidation);
 app.use(router);
 app.use(VueAxios, axios);
 app.use(PrimeVue);
